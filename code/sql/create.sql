@@ -14,6 +14,109 @@ CREATE SEQUENCE customer_id_gen START WITH 0;
 CREATE SEQUENCE flightNum_gen START WITH 0;
 CREATE SEQUENCE plane_id_gen START WITH 0;
 CREATE SEQUENCE tech_id_gen START WITH 0;
+CREATE SEQUENCE reservation_rnum_gen START WITH 0;
+CREATE SEQUENCE repair_rid_gen START WITH 0;
+CREATE SEQUENCE flightinfo_fiid_gen START WITH 0;
+CREATE SEQUENCE schedule_id_gen START WITH 0;
+
+CREATE OR REPLACE FUNCTION get_plane_id()
+	RETURNS "trigger" AS
+	$BODY$
+	BEGIN
+		perform setval('plane_id_gen', (SELECT MAX(id) FROM Plane) );
+		NEW.id := nextval('plane_id_gen');
+		RETURN NEW;
+	END;
+	$BODY$
+	LANGUAGE plgsql VOLATILE;
+
+CREATE OR REPLACE FUNCTION get_pilot_id()
+	RETURNS "trigger" AS
+	$BODY$
+	BEGIN
+		perform setval('pilot_id_gen', (SELECT MAX(id) FROM Pilot) );
+		NEW.id := nextval('pilot_id_gen');
+		RETURN NEW;
+	END;
+	$BODY$
+	LANGUAGE plgsql VOLATILE;
+	
+CREATE OR REPLACE FUNCTION get_customer_id()
+	RETURNS "trigger" AS
+	$BODY$
+	BEGIN
+		perform setval('customer_id_gen', (SELECT MAX(id) FROM Customer) );
+		NEW.id := nextval('customer_id_gen');
+		RETURN NEW;
+	END;
+	$BODY$
+	LANGUAGE plgsql VOLATILE;
+	
+CREATE OR REPLACE FUNCTION get_tech_id()
+	RETURNS "trigger" AS
+	$BODY$
+	BEGIN
+		perform setval('tech_id_gen', (SELECT MAX(id) FROM Technician) );
+		NEW.id := nextval('tech_id_gen');
+		RETURN NEW;
+	END;
+	$BODY$
+	LANGUAGE plgsql VOLATILE;
+
+CREATE OR REPLACE FUNCTION get_reservation_rnum()
+	RETURNS "trigger" AS
+	
+	$BODY$
+		perform setval('reservation_rnum_gen', (SELECT MAX(rnum) FROM Reservation );
+		NEW.rnum := nextval('reservation_rnum_gen');
+		RETURN NEW;
+	end;
+	$BODY$
+	LANGUAGE plgsql VOLATILE;
+	
+CREATE OR REPLACE FUNCTION get_flightinfo_fiid()
+	RETURNS "trigger" AS
+	
+	$BODY$
+		perform setval('flightinfo_fiid_gen', (SELECT MAX(fiid) FROM FlightInfo );
+		NEW.fiid := nextval('flightinfo_fiid_gen');
+		RETURN NEW;
+	end;
+	$BODY$
+	LANGUAGE plgsql VOLATILE;
+
+CREATE OR REPLACE FUNCTION get_repairs_rid()
+	RETURNS "trigger" AS
+	
+	$BODY$
+		perform setval('repair_rid_gen', (SELECT MAX(rid) FROM Repairs );
+		NEW.rid := nextval('repair_rid_gen');
+		RETURN NEW;
+	end;
+	$BODY$
+	LANGUAGE plgsql VOLATILE;
+
+CREATE OR REPLACE FUNCTION get_schedule_id()
+	RETURNS "trigger" AS
+	
+	$BODY$
+		perform setval('schedule_id_gen', (SELECT MAX(id) FROM schedule);
+		NEW.rnum := nextval('schedule_id_gen');
+		RETURN NEW;
+	end;
+	$BODY$
+	LANGUAGE plgsql VOLATILE;
+
+CREATE OR REPLACE FUNCTION get_flight_fnum()
+	RETURNS "trigger" AS
+	$BODY$
+	BEGIN
+		perform setval('flightNum_gen', (SELECT MAX(fnum) FROM Flight) );
+		NEW.id := nextval('flightNum_gen');
+		RETURN NEW;
+	END;
+	$BODY$
+	LANGUAGE plgsql VOLATILE;
 
 -------------
 ---DOMAINS---
@@ -225,8 +328,27 @@ COPY Schedule (
 FROM 'schedule.csv'
 WITH DELIMITER ',';
 
+CREATE TRIGGER new_plane_entry BEFORE INSERT 
+ON Plane FOR EACH ROW
+EXECUTE PROCEDURE get_plane_id();
 
-ALTER SEQUENCE pilot_id_gen RESTART WITH (SELECT MAX(Pilot) FROM Pilot);
+CREATE TRIGGER new_pilot_entry BEFORE INSERT 
+ON Pilot FOR EACH ROW
+EXECUTE PROCEDURE get_pilot_id();
 
+CREATE TRIGGER new_tech_entry BEFORE INSERT 
+ON Technician FOR EACH ROW
+EXECUTE PROCEDURE get_tech_id();
 
+CREATE TRIGGER new_flight_entry BEFORE INSERT 
+ON Flight FOR EACH ROW
+EXECUTE PROCEDURE get_flight_fnum();
+
+CREATE TRIGGER new_flightinfo_entry BEFORE INSERT 
+ON FlightInfo FOR EACH ROW
+EXECUTE PROCEDURE get_flightinfo_fiid();
+
+CREATE TRIGGER new_schedual_entry BEFORE INSERT 
+ON Schedule FOR EACH ROW
+EXECUTE PROCEDURE get_schedule_id();
 
