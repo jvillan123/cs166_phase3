@@ -304,19 +304,17 @@ public class DBproject{
 	
 	public static void AddPlane(DBproject esql) {//1
 		try{
-			string add_plane = "INSERT INTO Plane VALUES( "
-			//System.out.print("\tEnter ID: $");
-			//string plane_id = in.readLine();
+			String add_plane = "INSERT INTO Plane VALUES( "
 			System.out.print("\tEnter Make: $");
-			string plane_make = in.readLine();
+			String plane_make = in.readLine();
 			System.out.print("\tEnter Modle: $");
-			string plane_model = in.readLine();
+			String plane_model = in.readLine();
 			System.out.print("\tEnter Age: $");
-			string plane_age = in.readLine();
+			String plane_age = in.readLine();
 			System.out.print("\tEnter seats: $");
-			string plane_seats = in.readLine();
+			String plane_seats = in.readLine();
 			
-			add_plane = add_plane + "plane_id_gen.nextval, " + ("'" + plane_make + "'") + ", " + ("'" + plane_model + "'") + ", " + plane_age + ", " + plane_seats + ");" ;   
+			add_plane = add_plane  + ("'" + plane_make + "'") + ", " + ("'" + plane_model + "'") + ", " + plane_age + ", " + plane_seats + ")" ;   
 			
 			executeUpdate(add_plane);
 			
@@ -328,16 +326,14 @@ public class DBproject{
 	public static void AddPilot(DBproject esql) {//2
 		try{
 			
-			string add_pilot = "INSERT INTO Pilot VALUES( "
+			String add_pilot = "INSERT INTO Pilot VALUES( "
 			
-			//System.out.print("\tEnter ID: $");
-			//string pilot_id = in.readLine();
 			System.out.print("\tEnter Name: $");
-			string pilot_name = in.readLine();
+			String pilot_name = in.readLine();
 			System.out.print("\tEnter Nationality: $");
-			string pilot_nation = in.readLine();
+			String pilot_nation = in.readLine();
 			
-			add_pilot = add_pilot + "pilot_id_gen.nextval, " + ("'" + pilot_name + "'") +("'" + pilot_nation + "'");
+			add_pilot = add_pilot + ("'" + pilot_name + "'") +("'" + pilot_nation + "')");
 			
 			executeUpdate(add_pilot);
 			
@@ -350,14 +346,14 @@ public class DBproject{
 		// Given a pilot, plane and flight, adds a flight in the DB
 		try{
 			
-			string add_flight = "INSERT INTO Flight VALUES( "
+			String add_flight = "INSERT INTO Flight VALUES( "
 			
 			System.out.print("\tEnter Pilot ID: $");
-			string pilot_id = in.readLine();
+			String flight_cost = in.readLine();
 			System.out.print("\tEnter Plane ID: $");
-			string plane_id = in.readLine();
-			System.out.print("\tEnter Flight Number: $");
-			string Flight_num = in.readLine();
+			String flight_stops = in.readLine();
+			System.out.print("\tEnter Flight: $");
+			String pilot_name = in.readLine();
 			
 			//add_flight = add_flight + " " ;
 			
@@ -369,13 +365,11 @@ public class DBproject{
 	public static void AddTechnician(DBproject esql) {//4
 		try{
 			
-			string add_tech = "INSERT INTO Technician VALUES( tech_id_gen.nextval , "
-			//System.out.print("\tEnter ID: $");
-			//string tech_id = in.readLine();
+			String add_tech = "INSERT INTO Technician VALUES( "
 			System.out.print("\tEnter Name: $");
-			string tech_name = in.readLine();
+			String tech_name = in.readLine();
 			
-			add_tech = add_tech + ("'" + tech_name + "'")
+			add_tech = add_tech + ("'" + tech_name + "')")
 			
 			executeUpdate(add_tech);
 			
@@ -388,6 +382,45 @@ public class DBproject{
 		// Given a customer and a flight that he/she wants to book, add a reservation to the DB
 		try{
 			
+			String add_reservation = "INSERT INTO Reservation VALUES( ";
+			
+			System.out.print("\tEnter Flight Number: $");
+			String customer_id = in.readLine();
+			System.out.print("\tEnter Customer id: $");
+			String flight_id = in.readLine();
+			
+			String flight_schedual_info = "SELECT plane_id FROM FlightInfo x, Flight y, Schedule z WHERE x.flight_id = '";
+			
+			flight_schedual_info = flight_schedual_info + flight_id + "' , y.fnum = x.flight_id , z.flightnum = x.flight_id ";
+			
+			List<List<String>> planeinfo = executeQueryAndReturnResult(flight_schedual_info);
+			List<String> plane = planeinfo.get(0);
+			String plane_id = plane.get(0) + "'";
+			
+			String plane_seats_querry = "SELECT seats FROM Plane x WHERE x.id = '" + plane_id ;
+			List<List<String>> planeseats = executeQueryAndReturnResult(plane_seats_querry);
+			List<String> plane_seats_num_row = planeseats.get(0);
+			
+			int num_of_total_seats = Integer.parseInt(plane_seats_num_row.get(0));
+			
+			String flight_seats_sold_querry = "SELECT num_sold FROM Flight x WHERE x.id = '" + flight_id + "'" ;
+			List<List<String>> flightseats = executeQueryAndReturnResult(flight_seats_sold_querry);
+			List<String> Flight_seats_row = flightseats.get(0);
+			
+			int num_of_seats_sold = Integer.parseInt(Flight_seats_row.get(0));
+			
+			int available_seats = num_of_total_seats - num_of_seats_sold;
+			
+			if(available_seats != 0 ){
+				
+				
+				
+			}else {
+				
+			}
+			
+			
+			
 		} catch(Exception e){
          System.err.println (e.getMessage());
       } 
@@ -398,13 +431,34 @@ public class DBproject{
 		try{
 			
 			System.out.print("\tEnter Flight Number: $");
-			string flight_num = in.readLine();
+			String flight_num = in.readLine();
 			System.out.print("\tEnter Date: $");
-			string date_of_flight = in.readLine();
+			String date_of_flight = in.readLine();
 			
-			string flight_schedual_info = "SELECT plane_id FROM FlightInfo x, Flight y, Schedule z Where x.flight_id = "
+			String flight_schedual_info = "SELECT plane_id FROM FlightInfo x, Flight y, Schedule z WHERE x.flight_id = '";
 			
-			flight_schedual_info = flight_schedual_info + flight_num + " , y.fnum = x.flight_id , z.flightnum = x.flight_id "
+			flight_schedual_info = flight_schedual_info + flight_num + "' , y.fnum = x.flight_id , z.flightnum = x.flight_id ";
+			
+			List<List<String>> planeinfo = executeQueryAndReturnResult(flight_schedual_info);
+			List<String> plane = planeinfo.get(0);
+			String plane_id = plane.get(0) + "'";
+			
+			String plane_seats_querry = "SELECT seats FROM Plane x WHERE x.id = '" + plane_id ;
+			List<List<String>> planeseats = executeQueryAndReturnResult(plane_seats_querry);
+			List<String> plane_seats_num_row = planeseats.get(0);
+			
+			int num_of_total_seats = Integer.parseInt(plane_seats_num_row.get(0));
+			
+			String flight_seats_sold_querry = "SELECT num_sold FROM Flight x WHERE x.id = '" + flight_num + "'" ;
+			List<List<String>> flightseats = executeQueryAndReturnResult(flight_seats_sold_querry);
+			List<String> Flight_seats_row = flightseats.get(0);
+			
+			int num_of_seats_sold = Integer.parseInt(Flight_seats_row.get(0));
+			
+			int available_seats = num_of_total_seats - num_of_seats_sold;
+			
+			System.out.print("\tFlight Number " + flight_num + " has "+ available_seats +" available seats");
+			
 			
 		} catch(Exception e){
          System.err.println (e.getMessage());
@@ -415,6 +469,12 @@ public class DBproject{
 		// Count number of repairs per planes and list them in descending order
 		try{
 			
+			
+			String query = "SELECT plane_id, count(rid) FROM Repairs GROUP BY plane_id ORDER BY count(rid) DESC ";
+			executeQueryAndPrintResult(query);
+			
+			
+			
 		} catch(Exception e){
          System.err.println (e.getMessage());
       } 
@@ -424,6 +484,9 @@ public class DBproject{
 		// Count repairs per year and list them in ascending order
 		try{
 			
+			String query = "SELECT year(repair_date), count(rid) FROM Repairs GROUP BY year(repair_date) ORDER BY count(rid) ASC ";
+			executeQueryAndPrintResult(query);
+			
 		} catch(Exception e){
          System.err.println (e.getMessage());
       } 
@@ -432,6 +495,18 @@ public class DBproject{
 	public static void FindPassengersCountWithStatus(DBproject esql) {//9
 		// Find how many passengers there are with a status (i.e. W,C,R) and list that number.
 		try{
+			
+			System.out.print("\tEnter flight number: $");
+			String flight_num = in.readLine();
+			System.out.print("\tEnter passenger status: $");
+			String status_wanted = in.readLine();
+			
+			String query = "SELECT fid, count(cid) FROM Reservation WHERE status = '";
+			
+			query = query + status_wanted + "', fid = '" + flight_num + "'";
+			
+			executeQueryAndPrintResult(query);
+			
 			
 		} catch(Exception e){
          System.err.println (e.getMessage());
