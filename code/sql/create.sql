@@ -9,15 +9,15 @@ DROP TABLE IF EXISTS FlightInfo CASCADE;--OK
 DROP TABLE IF EXISTS Repairs CASCADE;--OK
 DROP TABLE IF EXISTS Schedule CASCADE;--OK
 
-CREATE SEQUENCE pilot_id_gen START WITH 0;
-CREATE SEQUENCE customer_id_gen START WITH 0;
-CREATE SEQUENCE flightNum_gen START WITH 0;
-CREATE SEQUENCE plane_id_gen START WITH 0;
-CREATE SEQUENCE tech_id_gen START WITH 0;
-CREATE SEQUENCE reservation_rnum_gen START WITH 0;
-CREATE SEQUENCE repair_rid_gen START WITH 0;
-CREATE SEQUENCE flightinfo_fiid_gen START WITH 0;
-CREATE SEQUENCE schedule_id_gen START WITH 0;
+CREATE SEQUENCE pilot_id_gen START WITH 1;
+CREATE SEQUENCE customer_id_gen START WITH 1;
+CREATE SEQUENCE flightNum_gen START WITH 1;
+CREATE SEQUENCE plane_id_gen START WITH 1;
+CREATE SEQUENCE tech_id_gen START WITH 1;
+CREATE SEQUENCE reservation_rnum_gen START WITH 1;
+CREATE SEQUENCE repair_rid_gen START WITH 1;
+CREATE SEQUENCE flightinfo_fiid_gen START WITH 1;
+CREATE SEQUENCE schedule_id_gen START WITH 1;
 
 CREATE OR REPLACE FUNCTION get_plane_id()
 	RETURNS "trigger" AS
@@ -28,7 +28,7 @@ CREATE OR REPLACE FUNCTION get_plane_id()
 		RETURN NEW;
 	END;
 	$BODY$
-	LANGUAGE plgsql VOLATILE;
+	LANGUAGE plpgsql VOLATILE;
 
 CREATE OR REPLACE FUNCTION get_pilot_id()
 	RETURNS "trigger" AS
@@ -39,7 +39,7 @@ CREATE OR REPLACE FUNCTION get_pilot_id()
 		RETURN NEW;
 	END;
 	$BODY$
-	LANGUAGE plgsql VOLATILE;
+	LANGUAGE plpgsql VOLATILE;
 	
 CREATE OR REPLACE FUNCTION get_customer_id()
 	RETURNS "trigger" AS
@@ -50,7 +50,7 @@ CREATE OR REPLACE FUNCTION get_customer_id()
 		RETURN NEW;
 	END;
 	$BODY$
-	LANGUAGE plgsql VOLATILE;
+	LANGUAGE plpgsql VOLATILE;
 	
 CREATE OR REPLACE FUNCTION get_tech_id()
 	RETURNS "trigger" AS
@@ -61,51 +61,54 @@ CREATE OR REPLACE FUNCTION get_tech_id()
 		RETURN NEW;
 	END;
 	$BODY$
-	LANGUAGE plgsql VOLATILE;
+	LANGUAGE plpgsql VOLATILE;
 
+
+	
 CREATE OR REPLACE FUNCTION get_reservation_rnum()
 	RETURNS "trigger" AS
-	
 	$BODY$
-		perform setval('reservation_rnum_gen', (SELECT MAX(rnum) FROM Reservation );
+	BEGIN
+		perform setval('reservation_rnum_gen', (SELECT MAX(rnum) FROM Reservation) );
 		NEW.rnum := nextval('reservation_rnum_gen');
 		RETURN NEW;
-	end;
+	END;
 	$BODY$
-	LANGUAGE plgsql VOLATILE;
+	LANGUAGE plpgsql VOLATILE;
 	
-CREATE OR REPLACE FUNCTION get_flightinfo_fiid()
+	CREATE OR REPLACE FUNCTION get_flightinfo_fiid()
 	RETURNS "trigger" AS
-	
 	$BODY$
-		perform setval('flightinfo_fiid_gen', (SELECT MAX(fiid) FROM FlightInfo );
+	BEGIN
+		perform setval('flightinfo_fiid_gen', (SELECT MAX(fiid) FROM FlightInfo) );
 		NEW.fiid := nextval('flightinfo_fiid_gen');
 		RETURN NEW;
-	end;
+	END;
 	$BODY$
-	LANGUAGE plgsql VOLATILE;
-
+	LANGUAGE plpgsql VOLATILE;
+	
 CREATE OR REPLACE FUNCTION get_repairs_rid()
 	RETURNS "trigger" AS
-	
 	$BODY$
-		perform setval('repair_rid_gen', (SELECT MAX(rid) FROM Repairs );
+	BEGIN
+		perform setval('repair_rid_gen', (SELECT MAX(rid) FROM Repairs) );
 		NEW.rid := nextval('repair_rid_gen');
 		RETURN NEW;
-	end;
+	END;
 	$BODY$
-	LANGUAGE plgsql VOLATILE;
+	LANGUAGE plpgsql VOLATILE;
 
 CREATE OR REPLACE FUNCTION get_schedule_id()
 	RETURNS "trigger" AS
-	
 	$BODY$
-		perform setval('schedule_id_gen', (SELECT MAX(id) FROM schedule);
+	BEGIN
+		perform setval('schedule_id_gen', (SELECT MAX(id) FROM Schedule) );
 		NEW.rnum := nextval('schedule_id_gen');
 		RETURN NEW;
-	end;
+	END;
 	$BODY$
-	LANGUAGE plgsql VOLATILE;
+	LANGUAGE plpgsql VOLATILE;
+
 
 CREATE OR REPLACE FUNCTION get_flight_fnum()
 	RETURNS "trigger" AS
@@ -116,7 +119,7 @@ CREATE OR REPLACE FUNCTION get_flight_fnum()
 		RETURN NEW;
 	END;
 	$BODY$
-	LANGUAGE plgsql VOLATILE;
+	LANGUAGE plpgsql VOLATILE;
 
 -------------
 ---DOMAINS---
