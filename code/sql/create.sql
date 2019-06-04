@@ -355,3 +355,7 @@ CREATE TRIGGER new_schedual_entry BEFORE INSERT
 ON Schedule FOR EACH ROW
 EXECUTE PROCEDURE get_schedule_id();
 
+CREATE TRIGGER new_reservation_rnum BEFORE INSERT
+ON Schedule FOR EACH ROW
+EXECUTE PROCEDURE get_reservation_rnum();
+

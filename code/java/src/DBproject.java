@@ -424,31 +424,40 @@ public class DBproject{
 
 	public static void BookFlight(DBproject esql) {//5
 		// Given a customer and a flight that he/she wants to book, add a reservation to the DB
+		boolean debug = true;
 		try{
 			
 			
-			String add_reservation = "INSERT INTO Reservation VALUES( ";
+			String add_reservation = "INSERT INTO Reservation(cid, fid, status) VALUES( ";
 			
 			System.out.print("\tEnter Flight Number: $");
 			String customer_id = in.readLine();
-			System.out.print("\tEnter Customer id: $");
+			if(debug == true){
+				System.out.print("\tEnter Customer id: $");
+			}
 			String flight_id = in.readLine();
 			
-			String flight_schedual_info = "SELECT plane_id FROM FlightInfo x, Flight y, Schedule z WHERE x.flight_id = '";
+			String flight_schedual_info = "SELECT x.plane_id FROM FlightInfo x, Flight y, Schedule z WHERE x.flight_id = ";
 			
-			flight_schedual_info = flight_schedual_info + flight_id + "' , y.fnum = x.flight_id , z.flightnum = x.flight_id ";
-			
+			flight_schedual_info = flight_schedual_info + flight_id + " AND y.fnum = x.flight_id AND z.flightNum = x.flight_id;";
+			System.out.println(flight_schedual_info);
 			List<List<String>> planeinfo = esql.executeQueryAndReturnResult(flight_schedual_info);
 			List<String> plane = planeinfo.get(0);
-			String plane_id = plane.get(0) + "'";
+			String plane_id = plane.get(0);
 			
-			String plane_seats_querry = "SELECT seats FROM Plane x WHERE x.id = '" + plane_id ;
+			String plane_seats_querry = "SELECT seats FROM Plane x WHERE x.id = " + plane_id + ";";
+			if(debug == true){
+				System.out.println(plane_seats_querry);
+			}
 			List<List<String>> planeseats = esql.executeQueryAndReturnResult(plane_seats_querry);
 			List<String> plane_seats_num_row = planeseats.get(0);
 			
 			int num_of_total_seats = Integer.parseInt(plane_seats_num_row.get(0));
 			
-			String flight_seats_sold_querry = "SELECT num_sold FROM Flight x WHERE x.id = '" + flight_id + "'" ;
+			String flight_seats_sold_querry = "SELECT num_sold FROM Flight x WHERE x.fnum = " + flight_id + ";" ;
+			if(debug == true){
+				System.out.println(flight_seats_sold_querry);
+			}
 			List<List<String>> flightseats = esql.executeQueryAndReturnResult(flight_seats_sold_querry);
 			List<String> Flight_seats_row = flightseats.get(0);
 			
@@ -456,10 +465,22 @@ public class DBproject{
 			
 			int available_seats = num_of_total_seats - num_of_seats_sold;
 			
-			String customer_exist_query = "SELECT cid FROM Customer WHERE cid = '" + customer_id + "'";
+			String customer_exist_query = "SELECT c.id FROM Customer c WHERE c.id = " + customer_id ;
+			if(debug == true){
+				System.out.println(customer_exist_query);
+			}
 			List<List<String>> customerinfo = esql.executeQueryAndReturnResult(customer_exist_query);
 			
-			
+			add_reservation = add_reservation + customerinfo.get(0).get(0) + ", " + flight_id + ", ";
+			if(available_seats > 0){
+				add_reservation = add_reservation + "'R');";
+			}else{
+				add_reservation = add_reservation + "'W');";
+			}
+			if(debug == true){
+				System.out.println(add_reservation);
+			}
+			esql.executeUpdate(add_reservation);
 			
 		} catch(Exception e){
          System.err.println (e.getMessage());
@@ -476,21 +497,21 @@ public class DBproject{
 			System.out.print("\tEnter Date: $");
 			String date_of_flight = in.readLine();
 			
-			String flight_schedual_info = "SELECT plane_id FROM FlightInfo x, Flight y, Schedule z WHERE x.flight_id = '";
+			String flight_schedual_info = "SELECT x.plane_id FROM FlightInfo x, Flight y, Schedule z WHERE x.flight_id =";
 			
-			flight_schedual_info = flight_schedual_info + flight_num + "' , y.fnum = x.flight_id , z.flightnum = x.flight_id ";
+			flight_schedual_info = flight_schedual_info + flight_num + " AND y.fnum = x.flight_id AND z.flightNum = x.flight_id;";
 			
 			List<List<String>> planeinfo = esql.executeQueryAndReturnResult(flight_schedual_info);
 			List<String> plane = planeinfo.get(0);
 			String plane_id = plane.get(0) + "'";
 			
-			String plane_seats_querry = "SELECT seats FROM Plane x WHERE x.id = '" + plane_id ;
+			String plane_seats_querry = "SELECT x.seats FROM Plane x WHERE x.id = " + plane_id ;
 			List<List<String>> planeseats = esql.executeQueryAndReturnResult(plane_seats_querry);
 			List<String> plane_seats_num_row = planeseats.get(0);
 			
 			int num_of_total_seats = Integer.parseInt(plane_seats_num_row.get(0));
 			
-			String flight_seats_sold_querry = "SELECT num_sold FROM Flight x WHERE x.id = '" + flight_num + "'" ;
+			String flight_seats_sold_querry = "SELECT x.num_sold FROM Flight x WHERE x.fnum = " + flight_num + ";";
 			List<List<String>> flightseats = esql.executeQueryAndReturnResult(flight_seats_sold_querry);
 			List<String> Flight_seats_row = flightseats.get(0);
 			
