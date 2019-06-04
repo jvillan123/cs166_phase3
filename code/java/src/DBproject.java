@@ -316,7 +316,7 @@ public class DBproject{
 			String plane_seats = in.readLine();
 		
 			add_plane = add_plane  + ("'" + plane_make + "'") + ", " + ("'" + plane_model + "'") + ", " + plane_age + ", " + plane_seats + ");" ;   
-			System.out.println(add_plane);
+			// System.out.println(add_plane);
 			esql.executeUpdate(add_plane);
 		}catch(Exception e){
          System.err.println (e.getMessage());
@@ -335,8 +335,8 @@ public class DBproject{
 			System.out.print("\tEnter Nationality: $");
 			String pilot_nation = in.readLine();
 			
-			add_pilot = add_pilot + ("'" + pilot_name + "'") +("'" + pilot_nation + "')");
-			
+			add_pilot = add_pilot + ("'" + pilot_name + "', ") + ("'" + pilot_nation + "');");
+			System.out.println(add_pilot);
 			esql.executeUpdate(add_pilot);
 			
 		} catch(Exception e){
@@ -369,7 +369,7 @@ public class DBproject{
 			add_flight = add_flight + flight_cost + ", " + 0 + "," + flight_stops + 
 						", '" + actual_departure_date	+ "', '"  + actual_arrival_date	+ 
 						"', '" + arrival_airport + "', '" + departure_airport + "');";
-			System.out.print(add_flight);
+			// System.out.print(add_flight);
 			esql.executeUpdate(add_flight);
 
 			//get flight number for schdeduling
@@ -413,7 +413,8 @@ public class DBproject{
 			System.out.print("\tEnter Name: $");
 			String tech_name = in.readLine();
 			
-			add_tech = add_tech + ("'" + tech_name + "')");
+			add_tech = add_tech + ("'" + tech_name + "');");
+			System.out.print(add_tech);
 			esql.executeUpdate(add_tech);
 			
 		} catch(Exception e){
@@ -544,8 +545,8 @@ public class DBproject{
 			
 			String query = "SELECT count(cid) FROM Reservation WHERE status = '";
 			
-			query = query + status_wanted + "', fid = '" + flight_num + "'";
-			
+			query = query + status_wanted + "' AND fid = '" + flight_num + "';";
+			System.out.println(query);
 			esql.executeQueryAndPrintResult(query);
 			
 			
