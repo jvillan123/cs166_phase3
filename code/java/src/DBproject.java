@@ -361,7 +361,7 @@ public class DBproject{
 			String arrival_airport = in.readLine();
 			System.out.print("\tEnter departure airport code: $");
 			String departure_airport = in.readLine();
-			System.out.print("\tEnter departure date: (YYYY-MM-DD)$");
+			System.out.print("\tEnter departure date: (YYYY-MM-DD): $");
 			String actual_departure_date = in.readLine();
 			System.out.print("\tEnter arrivale date: (YYYY-MM-DD): $");
 			String actual_arrival_date = in.readLine();
@@ -427,7 +427,7 @@ public class DBproject{
 		boolean debug = true;
 		try{
 			
-			
+			//add reservation part
 			String add_reservation = "INSERT INTO Reservation(cid, fid, status) VALUES( ";
 			
 			System.out.print("\tEnter Flight Number: $");
@@ -481,7 +481,10 @@ public class DBproject{
 				System.out.println(add_reservation);
 			}
 			esql.executeUpdate(add_reservation);
-			
+
+			//update flight.num_sold part
+			String update_flight_num_sold = "UPDATE Flight SET num_sold=" + (num_of_seats_sold + 1) + " WHERE fnum=" + flight_id + ";";
+			esql.executeUpdate(update_flight_num_sold);
 		} catch(Exception e){
          System.err.println (e.getMessage());
       } 

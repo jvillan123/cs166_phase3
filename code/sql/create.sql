@@ -63,8 +63,6 @@ CREATE OR REPLACE FUNCTION get_tech_id()
 	$BODY$
 	LANGUAGE plpgsql VOLATILE;
 
-
-	
 CREATE OR REPLACE FUNCTION get_reservation_rnum()
 	RETURNS "trigger" AS
 	$BODY$
@@ -76,7 +74,7 @@ CREATE OR REPLACE FUNCTION get_reservation_rnum()
 	$BODY$
 	LANGUAGE plpgsql VOLATILE;
 	
-	CREATE OR REPLACE FUNCTION get_flightinfo_fiid()
+CREATE OR REPLACE FUNCTION get_flightinfo_fiid()
 	RETURNS "trigger" AS
 	$BODY$
 	BEGIN
@@ -356,6 +354,6 @@ ON Schedule FOR EACH ROW
 EXECUTE PROCEDURE get_schedule_id();
 
 CREATE TRIGGER new_reservation_rnum BEFORE INSERT
-ON Schedule FOR EACH ROW
+ON Reservation FOR EACH ROW
 EXECUTE PROCEDURE get_reservation_rnum();
 
