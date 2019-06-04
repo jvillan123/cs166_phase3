@@ -36,7 +36,6 @@ public class DBproject{
 	private Connection _connection = null;
 	static BufferedReader in = new BufferedReader(new InputStreamReader(System.in));
 	
-	public DBproject(){}
 	
 	public DBproject(String dbname, String dbport, String user, String passwd) throws SQLException {
 		System.out.print("Connecting to database...");
@@ -306,7 +305,7 @@ public class DBproject{
 	
 	public static void AddPlane(DBproject esql) {//1
 		try{
-			String add_plane = "INSERT INTO Plane VALUES( ";
+			String add_plane = "INSERT INTO Plane(make, model, age, seats) VALUES(";
 			System.out.print("\tEnter Make: $");
 			String plane_make = in.readLine();
 			System.out.print("\tEnter Modle: $");
@@ -328,8 +327,8 @@ public class DBproject{
 
 	public static void AddPilot(DBproject esql) {//2
 		try{
-			
-			String add_pilot = "INSERT INTO Pilot VALUES( ";
+			// errors out stating that it need more info -> may be a problem with triggers
+			String add_pilot = "INSERT INTO Pilot(fullname, nationality) VALUES(";
 			
 			System.out.print("\tEnter Name: $");
 			String pilot_name = in.readLine();
@@ -367,8 +366,8 @@ public class DBproject{
 
 	public static void AddTechnician(DBproject esql) {//4
 		try{
-			
-			String add_tech = "INSERT INTO Technician VALUES( ";
+			// errors out stating that it need more info -> may be a problem with triggers
+			String add_tech = "INSERT INTO Technician(full_name) VALUES( ";
 			System.out.print("\tEnter Name: $");
 			String tech_name = in.readLine();
 			
@@ -484,7 +483,7 @@ public class DBproject{
 		// Count repairs per year and list them in ascending order
 		try{
 			
-			String query = "SELECT year(repair_date), count(rid) FROM Repairs GROUP BY year(repair_date) ORDER BY count(rid) ASC ";
+			String query = "SELECT EXTRACT(YEAR FROM repair_date), count(rid) FROM Repairs GROUP BY EXTRACT(YEAR FROM repair_date) ORDER BY count(rid) ASC ";
 			esql.executeQueryAndPrintResult(query);
 			
 		} catch(Exception e){
@@ -499,10 +498,10 @@ public class DBproject{
 			
 			System.out.print("\tEnter flight number: $");
 			String flight_num = in.readLine();
-			System.out.print("\tEnter passenger status: $");
+			System.out.print("\tEnter passenger status(W,C,R): $");
 			String status_wanted = in.readLine();
 			
-			String query = "SELECT fid, count(cid) FROM Reservation WHERE status = '";
+			String query = "SELECT count(cid) FROM Reservation WHERE status = '";
 			
 			query = query + status_wanted + "', fid = '" + flight_num + "'";
 			
