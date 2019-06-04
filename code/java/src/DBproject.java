@@ -305,7 +305,7 @@ public class DBproject{
 	
 	public static void AddPlane(DBproject esql) {//1
 		try{
-			String add_plane = "INSERT INTO Plane(make, model, age, seats) VALUES(";
+			String add_plane = "INSERT INTO Plane(make, model, age, seats) VALUES( ";
 			System.out.print("\tEnter Make: $");
 			String plane_make = in.readLine();
 			System.out.print("\tEnter Modle: $");
@@ -315,8 +315,8 @@ public class DBproject{
 			System.out.print("\tEnter seats: $");
 			String plane_seats = in.readLine();
 		
-			add_plane = add_plane  + ("'" + plane_make + "'") + ", " + ("'" + plane_model + "'") + ", " + plane_age + ", " + plane_seats + ")" ;   
-			
+			add_plane = add_plane  + ("'" + plane_make + "'") + ", " + ("'" + plane_model + "'") + ", " + plane_age + ", " + plane_seats + ");" ;   
+			System.out.println(add_plane);
 			esql.executeUpdate(add_plane);
 		}catch(Exception e){
          System.err.println (e.getMessage());
@@ -348,17 +348,59 @@ public class DBproject{
 		// Given a pilot, plane and flight, adds a flight in the DB
 		try{
 			
-			String add_flight = "INSERT INTO Flight VALUES( ";
-			
-			System.out.print("\tEnter Pilot ID: $");
+			String add_flight = "INSERT INTO Flight(cost, num_sold, num_stops, actual_departure_date, actual_arrival_date, arrival_airport, departure_airport) VALUES( ";
+			//make assumption that num_sold is 0 at this point
+			//make assumption that cost is user decision
+			//make assumption that actual arrival and departure date is correct and in format YYYY-MM-DDD
+			//for flight portion
+			System.out.print("\tEnter flight cost: $");
 			String flight_cost = in.readLine();
-			System.out.print("\tEnter Plane ID: $");
+			System.out.print("\tEnter number of stops: $");
 			String flight_stops = in.readLine();
-			System.out.print("\tEnter Flight: $");
-			String pilot_name = in.readLine();
+			System.out.print("\tEnter arrival airport code: $");
+			String arrival_airport = in.readLine();
+			System.out.print("\tEnter departure airport code: $");
+			String departure_airport = in.readLine();
+			System.out.print("\tEnter departure date: (YYYY-MM-DD)$");
+			String actual_departure_date = in.readLine();
+			System.out.print("\tEnter arrivale date: (YYYY-MM-DD): $");
+			String actual_arrival_date = in.readLine();
 			
-			//add_flight = add_flight + " " ;
+			add_flight = add_flight + flight_cost + ", " + 0 + "," + flight_stops + 
+						", '" + actual_departure_date	+ "', '"  + actual_arrival_date	+ 
+						"', '" + arrival_airport + "', '" + departure_airport + "');";
+			System.out.print(add_flight);
+			esql.executeUpdate(add_flight);
+
+			//get flight number for schdeduling
+			String query_flight_num = "SELECT F.fnum FROM Flight F WHERE F.cost=" + flight_cost + 
+						" AND F.num_sold=" + 0 + " AND F.num_stops=" + flight_stops + 
+						" AND F.actual_departure_date='" + actual_departure_date + "'" + 
+						" AND F.actual_arrival_date='" + actual_arrival_date + "'" +
+						" AND F.arrival_airport='" + arrival_airport + "'" +
+						" AND F.departure_airport='" + departure_airport + "';";
+			List<List<String>> flight_num_query_result = esql.executeQueryAndReturnResult(query_flight_num);
+			String flight_num = flight_num_query_result.get(0).get(0);
+
+			//for flight info portion
+			String add_flight_info = "INSERT INTO FlightInfo(flight_id, pilot_id, plane_id) VALUES( ";
+			System.out.print("\tEnter Pilot ID: $");
+			String pilot_id = in.readLine();
+			System.out.print("\tEnter Plane ID: $");
+			String plane_id = in.readLine();
+			add_flight_info = add_flight_info + flight_num + ", " + pilot_id + ", " + plane_id + ");";
+			System.out.print(add_flight_info);
+			esql.executeUpdate(add_flight_info);
 			
+
+			//for scheduling portion
+			String add_schedule = "INSERT INTO Schedule(flightNum, departure_time, arrival_time) VALUES( ";
+			add_schedule = add_schedule + flight_num + ", '" + actual_departure_date + "', '" + actual_arrival_date + "');";
+			System.out.print(add_schedule);
+			esql.executeUpdate(add_schedule);
+
+
+
 		} catch(Exception e){
          System.err.println (e.getMessage());
       } 
@@ -372,8 +414,7 @@ public class DBproject{
 			String tech_name = in.readLine();
 			
 			add_tech = add_tech + ("'" + tech_name + "')");
-			DBproject a = new DBproject();
-			a.executeUpdate(add_tech);
+			esql.executeUpdate(add_tech);
 			
 		} catch(Exception e){
          System.err.println (e.getMessage());
@@ -414,8 +455,8 @@ public class DBproject{
 			
 			int available_seats = num_of_total_seats - num_of_seats_sold;
 			
-			String customer_exist_query = "SELECT cid FROM Customer WHERE cid = '" + customer_id + "'"
-			List<List<String>> customerinfo = esql.executeQueryAndReturnResult();
+			String customer_exist_query = "SELECT cid FROM Customer WHERE cid = '" + customer_id + "'";
+			List<List<String>> customerinfo = esql.executeQueryAndReturnResult(customer_exist_query);
 			
 			
 			

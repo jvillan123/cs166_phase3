@@ -103,7 +103,7 @@ CREATE OR REPLACE FUNCTION get_schedule_id()
 	$BODY$
 	BEGIN
 		perform setval('schedule_id_gen', (SELECT MAX(id) FROM Schedule) );
-		NEW.rnum := nextval('schedule_id_gen');
+		NEW.id := nextval('schedule_id_gen');
 		RETURN NEW;
 	END;
 	$BODY$
@@ -115,7 +115,7 @@ CREATE OR REPLACE FUNCTION get_flight_fnum()
 	$BODY$
 	BEGIN
 		perform setval('flightNum_gen', (SELECT MAX(fnum) FROM Flight) );
-		NEW.id := nextval('flightNum_gen');
+		NEW.fnum := nextval('flightNum_gen');
 		RETURN NEW;
 	END;
 	$BODY$
