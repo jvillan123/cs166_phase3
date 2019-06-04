@@ -317,8 +317,8 @@ public class DBproject{
 			String plane_seats = in.readLine();
 		
 			add_plane = add_plane  + ("'" + plane_make + "'") + ", " + ("'" + plane_model + "'") + ", " + plane_age + ", " + plane_seats + ")" ;   
-			DBproject a = new DBproject();
-			a.executeUpdate(add_plane);
+			
+			esql.executeUpdate(add_plane);
 		}catch(Exception e){
          System.err.println (e.getMessage());
       } 
@@ -338,9 +338,7 @@ public class DBproject{
 			
 			add_pilot = add_pilot + ("'" + pilot_name + "'") +("'" + pilot_nation + "')");
 			
-			DBproject a = new DBproject();
-			
-			a.executeUpdate(add_pilot);
+			esql.executeUpdate(add_pilot);
 			
 		} catch(Exception e){
          System.err.println (e.getMessage());
@@ -387,7 +385,7 @@ public class DBproject{
 		// Given a customer and a flight that he/she wants to book, add a reservation to the DB
 		try{
 			
-			DBproject a = new DBproject();
+			
 			String add_reservation = "INSERT INTO Reservation VALUES( ";
 			
 			System.out.print("\tEnter Flight Number: $");
@@ -399,31 +397,26 @@ public class DBproject{
 			
 			flight_schedual_info = flight_schedual_info + flight_id + "' , y.fnum = x.flight_id , z.flightnum = x.flight_id ";
 			
-			List<List<String>> planeinfo = a.executeQueryAndReturnResult(flight_schedual_info);
+			List<List<String>> planeinfo = esql.executeQueryAndReturnResult(flight_schedual_info);
 			List<String> plane = planeinfo.get(0);
 			String plane_id = plane.get(0) + "'";
 			
 			String plane_seats_querry = "SELECT seats FROM Plane x WHERE x.id = '" + plane_id ;
-			List<List<String>> planeseats = a.executeQueryAndReturnResult(plane_seats_querry);
+			List<List<String>> planeseats = esql.executeQueryAndReturnResult(plane_seats_querry);
 			List<String> plane_seats_num_row = planeseats.get(0);
 			
 			int num_of_total_seats = Integer.parseInt(plane_seats_num_row.get(0));
 			
 			String flight_seats_sold_querry = "SELECT num_sold FROM Flight x WHERE x.id = '" + flight_id + "'" ;
-			List<List<String>> flightseats = a.executeQueryAndReturnResult(flight_seats_sold_querry);
+			List<List<String>> flightseats = esql.executeQueryAndReturnResult(flight_seats_sold_querry);
 			List<String> Flight_seats_row = flightseats.get(0);
 			
 			int num_of_seats_sold = Integer.parseInt(Flight_seats_row.get(0));
 			
 			int available_seats = num_of_total_seats - num_of_seats_sold;
 			
-			if(available_seats != 0 ){
-				
-				
-				
-			}else {
-				
-			}
+			String customer_exist_query = "SELECT cid FROM Customer WHERE cid = '" + customer_id + "'"
+			List<List<String>> customerinfo = esql.executeQueryAndReturnResult();
 			
 			
 			
@@ -436,7 +429,7 @@ public class DBproject{
 		// For flight number and date, find the number of availalbe seats (i.e. total plane capacity minus booked seats )
 		try{
 			
-			DBproject a = new DBproject();
+			
 			System.out.print("\tEnter Flight Number: $");
 			String flight_num = in.readLine();
 			System.out.print("\tEnter Date: $");
@@ -446,18 +439,18 @@ public class DBproject{
 			
 			flight_schedual_info = flight_schedual_info + flight_num + "' , y.fnum = x.flight_id , z.flightnum = x.flight_id ";
 			
-			List<List<String>> planeinfo = a.executeQueryAndReturnResult(flight_schedual_info);
+			List<List<String>> planeinfo = esql.executeQueryAndReturnResult(flight_schedual_info);
 			List<String> plane = planeinfo.get(0);
 			String plane_id = plane.get(0) + "'";
 			
 			String plane_seats_querry = "SELECT seats FROM Plane x WHERE x.id = '" + plane_id ;
-			List<List<String>> planeseats = a.executeQueryAndReturnResult(plane_seats_querry);
+			List<List<String>> planeseats = esql.executeQueryAndReturnResult(plane_seats_querry);
 			List<String> plane_seats_num_row = planeseats.get(0);
 			
 			int num_of_total_seats = Integer.parseInt(plane_seats_num_row.get(0));
 			
 			String flight_seats_sold_querry = "SELECT num_sold FROM Flight x WHERE x.id = '" + flight_num + "'" ;
-			List<List<String>> flightseats = a.executeQueryAndReturnResult(flight_seats_sold_querry);
+			List<List<String>> flightseats = esql.executeQueryAndReturnResult(flight_seats_sold_querry);
 			List<String> Flight_seats_row = flightseats.get(0);
 			
 			int num_of_seats_sold = Integer.parseInt(Flight_seats_row.get(0));
@@ -476,9 +469,9 @@ public class DBproject{
 		// Count number of repairs per planes and list them in descending order
 		try{
 			
-			DBproject a = new DBproject();
+			
 			String query = "SELECT plane_id, count(rid) FROM Repairs GROUP BY plane_id ORDER BY count(rid) DESC ";
-			a.executeQueryAndPrintResult(query);
+			esql.executeQueryAndPrintResult(query);
 			
 			
 			
@@ -490,9 +483,9 @@ public class DBproject{
 	public static void ListTotalNumberOfRepairsPerYear(DBproject esql) {//8
 		// Count repairs per year and list them in ascending order
 		try{
-			DBproject a = new DBproject();
+			
 			String query = "SELECT year(repair_date), count(rid) FROM Repairs GROUP BY year(repair_date) ORDER BY count(rid) ASC ";
-			a.executeQueryAndPrintResult(query);
+			esql.executeQueryAndPrintResult(query);
 			
 		} catch(Exception e){
          System.err.println (e.getMessage());
@@ -503,7 +496,7 @@ public class DBproject{
 		// Find how many passengers there are with a status (i.e. W,C,R) and list that number.
 		try{
 			
-			DBproject a = new DBproject();
+			
 			System.out.print("\tEnter flight number: $");
 			String flight_num = in.readLine();
 			System.out.print("\tEnter passenger status: $");
@@ -513,7 +506,7 @@ public class DBproject{
 			
 			query = query + status_wanted + "', fid = '" + flight_num + "'";
 			
-			a.executeQueryAndPrintResult(query);
+			esql.executeQueryAndPrintResult(query);
 			
 			
 		} catch(Exception e){
