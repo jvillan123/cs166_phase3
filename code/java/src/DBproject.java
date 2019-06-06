@@ -310,7 +310,7 @@ public class DBproject{
 			String plane_make = in.readLine();
 			System.out.print("\tEnter Modle: $");
 			String plane_model = in.readLine();
-			System.out.print("\tEnter Age: $");
+			System.out.print("\tEnter Age (YYYY): $");
 			String plane_age = in.readLine();
 			System.out.print("\tEnter seats: $");
 			String plane_seats = in.readLine();
@@ -318,6 +318,10 @@ public class DBproject{
 			add_plane = add_plane  + ("'" + plane_make + "'") + ", " + ("'" + plane_model + "'") + ", " + plane_age + ", " + plane_seats + ");" ;   
 			// System.out.println(add_plane);
 			esql.executeUpdate(add_plane);
+			
+			System.out.print("New plane added successfully\n");
+			
+			
 		}catch(Exception e){
          System.err.println (e.getMessage());
       } 
@@ -339,6 +343,9 @@ public class DBproject{
 			System.out.println(add_pilot);
 			esql.executeUpdate(add_pilot);
 			
+			System.out.print("New pilot added successfully\n");
+			
+			
 		} catch(Exception e){
          System.err.println (e.getMessage());
       } 
@@ -355,11 +362,11 @@ public class DBproject{
 			//for flight portion
 			System.out.print("\tEnter flight cost: $");
 			String flight_cost = in.readLine();
-			System.out.print("\tEnter number of stops: $");
+			System.out.print("\tEnter number of stops : $");
 			String flight_stops = in.readLine();
-			System.out.print("\tEnter arrival airport code: $");
+			System.out.print("\tEnter arrival airport code (ex. JFK): $");
 			String arrival_airport = in.readLine();
-			System.out.print("\tEnter departure airport code: $");
+			System.out.print("\tEnter departure airport code (ex. JFK): $");
 			String departure_airport = in.readLine();
 			System.out.print("\tEnter departure date: (YYYY-MM-DD): $");
 			String actual_departure_date = in.readLine();
@@ -396,8 +403,11 @@ public class DBproject{
 			//for scheduling portion
 			String add_schedule = "INSERT INTO Schedule(flightNum, departure_time, arrival_time) VALUES( ";
 			add_schedule = add_schedule + flight_num + ", '" + actual_departure_date + "', '" + actual_arrival_date + "');";
-			System.out.print(add_schedule);
+			//System.out.print(add_schedule);
 			esql.executeUpdate(add_schedule);
+			
+			System.out.print("New Flight added successfully\n");
+			
 
 
 
@@ -416,6 +426,9 @@ public class DBproject{
 			add_tech = add_tech + ("'" + tech_name + "');");
 			System.out.print(add_tech);
 			esql.executeUpdate(add_tech);
+			
+			System.out.print("New Technician added successfully\n");
+			
 			
 		} catch(Exception e){
          System.err.println (e.getMessage());
@@ -500,6 +513,10 @@ public class DBproject{
 			//update flight.num_sold part
 			String update_flight_num_sold = "UPDATE Flight SET num_sold=" + (num_of_seats_sold + 1) + " WHERE fnum=" + flight_id + ";";
 			esql.executeUpdate(update_flight_num_sold);
+			
+			System.out.print("New Reservation added successfully\n");
+			
+			
 		} catch(Exception e){
          System.err.println (e.getMessage());
       } 
@@ -553,6 +570,8 @@ public class DBproject{
 			String query = "SELECT plane_id, count(rid) FROM Repairs GROUP BY plane_id ORDER BY count(rid) DESC ";
 			esql.executeQueryAndPrintResult(query);
 			
+			System.out.print("Press Enter to continue\n");
+			String con = in.readLine();
 			
 			
 		} catch(Exception e){
@@ -566,6 +585,9 @@ public class DBproject{
 			
 			String query = "SELECT EXTRACT(YEAR FROM repair_date), count(rid) FROM Repairs GROUP BY EXTRACT(YEAR FROM repair_date) ORDER BY count(rid) ASC ";
 			esql.executeQueryAndPrintResult(query);
+			System.out.print("Press Enter to continue\n");
+			String con = in.readLine();
+			
 			
 		} catch(Exception e){
          System.err.println (e.getMessage());
@@ -589,6 +611,9 @@ public class DBproject{
 				System.out.println(query);
 			}
 			esql.executeQueryAndPrintResult(query);
+			
+			System.out.print("Press Enter to continue\n");
+			String con = in.readLine();
 			
 			
 		} catch(Exception e){
